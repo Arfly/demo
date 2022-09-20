@@ -8,12 +8,12 @@
  * @format
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import {Text, View, Image, Dimensions, StyleSheet} from 'react-native';
+import {Text, View, Image, Dimensions, StyleSheet, Alert} from 'react-native';
+import {SceneMap, TabView} from 'react-native-tab-view';
 
 const plateImg = require('./assets/plate.png');
-
 const suggestImg = require('./assets/suggest.png');
 const burgerImg = require('./assets/burger.png');
 const cupImg = require('./assets/cup.png');
@@ -118,11 +118,146 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     color: '#606060',
-    width: Dimensions.get('window').width - 22 - 30 - 18 * 2 - 32 - 25,
+    width: 228,
+  },
+  foodName: {
+    fontFamily: 'PingFang SC',
+    fontStyle: 'normal',
+    fontWeight: '600',
+    fontSize: 32,
+    lineHeight: 36,
+    color: '#EB5C77',
+    right: 70,
+    top: 80,
+    position: 'absolute',
+  },
+  price: {
+    fontFamily: 'PingFang SC',
+    fontStyle: 'normal',
+    fontWeight: '300',
+    fontSize: 24,
+    lineHeight: 28,
+    color: '#EB5C77',
+    position: 'absolute',
+    right: 70,
+    top: 112,
+  },
+  addButton: {
+    position: 'absolute',
+    width: 59,
+    height: 59,
+    left: 268,
+    top: 298,
+  },
+  scrollViewContainer: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height / 2 - 73,
+  },
+  tabView: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height / 2 - 73,
+    marginTop: 73,
   },
 });
 
+function Fries() {
+  const friesStyles = StyleSheet.create({
+    container: {
+      position: 'relative',
+    },
+    upper: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+    },
+    main: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+    },
+  });
+  return (
+    <View style={[friesStyles.container, styles.scrollViewContainer]}>
+      <Image
+        source={require('./assets/shutiao.png')}
+        style={friesStyles.main}
+      />
+      <Image source={require('./assets/st1.png')} style={friesStyles.upper} />
+      <Image source={require('./assets/st2.png')} style={friesStyles.upper} />
+      <Text style={styles.foodName}>FRIES</Text>
+      <Text style={styles.price}>4$</Text>
+    </View>
+  );
+}
+
+function Coffee() {
+  const coffeeStyles = StyleSheet.create({
+    container: {
+      position: 'relative',
+    },
+    upper: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+    },
+    main: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+    },
+  });
+  return (
+    <View style={[coffeeStyles.container, styles.scrollViewContainer]}>
+      <Image source={require('./assets/cf2.png')} style={coffeeStyles.main} />
+      <Image source={require('./assets/cf1.png')} style={coffeeStyles.upper} />
+      <Text style={styles.foodName}>LATTE</Text>
+      <Text style={styles.price}>3$</Text>
+    </View>
+  );
+}
+
+function Burger() {
+  const burgerStyles = StyleSheet.create({
+    container: {
+      position: 'relative',
+    },
+    upper: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+    },
+    main: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+    },
+  });
+  return (
+    <View style={[burgerStyles.container, styles.scrollViewContainer]}>
+      <Image source={require('./assets/hb2.png')} style={burgerStyles.main} />
+      <Image source={require('./assets/hb1.png')} style={burgerStyles.upper} />
+      <Text style={styles.foodName}>BURGER</Text>
+      <Text style={styles.price}>6$</Text>
+    </View>
+  );
+}
+
 const App = () => {
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    {key: 'first', title: 'First'},
+    {key: 'second', title: 'Second'},
+    {key: 'third', title: 'Third'},
+  ]);
+
+  const initialLayout = {width: Dimensions.get('window').width};
+
+  const renderScene = SceneMap({
+    first: Fries,
+    second: Coffee,
+    third: Burger,
+  });
+
   return (
     <LinearGradient
       colors={['#F5F5F5', '#FFEDED']}
@@ -143,11 +278,26 @@ const App = () => {
           <Image source={eatImg} style={styles.menuIcon} />
         </View>
       </LinearGradient>
-      <View />
+      {/* <View>
+        <TabView
+          navigationState={{index, routes}}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={initialLayout}
+          style={[styles.scrollViewContainer, {backgroundColor: 'red'}]}
+        />
+      </View> */}
+
+      <Image
+        source={require('./assets/add.png')}
+        style={styles.addButton}
+        onPress={Alert.alert(index + '')}
+      />
+
       <View style={styles.line} />
       <View style={styles.body}>
         <View style={styles.plateContainer}>
-          <Image source={plateImg} style={styles.plate} />
+          <Image source={plateImg} />
           {/* <Image source={require('./assets/coffee.png')} /> */}
           {/* <Image source={require('./assets/hanbao.png')} /> */}
           {/* <Image source={require('./assets/shutiao.png')} /> */}
@@ -178,6 +328,14 @@ const App = () => {
           <Text style={styles.payText}>Pay</Text>
         </LinearGradient>
       </View>
+      <TabView
+        navigationState={{index, routes}}
+        renderScene={renderScene}
+        renderTabBar={() => <View />}
+        onIndexChange={setIndex}
+        initialLayout={initialLayout}
+        style={styles.tabView}
+      />
     </LinearGradient>
   );
 };
