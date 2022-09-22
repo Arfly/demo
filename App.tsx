@@ -2,10 +2,10 @@ import React, {useRef, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   View,
-  Image,
   Dimensions,
   Animated,
   TouchableOpacity,
+  Easing,
 } from 'react-native';
 import {SceneMap, TabView} from 'react-native-tab-view';
 import {styles} from './src/styles';
@@ -44,7 +44,7 @@ const App = () => {
   const [buyArr, setBuyArr] = useState<Element[]>([]);
   const pos = [pos1, pos2, pos3];
 
-  const [prev, setPrev] = useState<number>();
+  const [prev, setPrev] = useState<number[]>([]);
 
   const targets = [
     {x: -110, y: 130},
@@ -55,26 +55,48 @@ const App = () => {
 
   function onAddPress() {
     setTotal(total + foodsPrice[index]);
-    if (buyArr.length < 3 && prev !== index) {
+    if (buyArr.length < 3 && prev.indexOf(index) === -1) {
       const buyNum = buyArr.length;
       buyArr.push(commodities[index]);
       setBuyArr([...buyArr]);
 
-      if (prev || prev === 0) {
-        Animated.spring(pos[prev], {
+      if (prev.length > 0) {
+        Animated.spring(pos[prev[prev.length - 1]], {
           toValue: targets[buyNum],
           useNativeDriver: true,
         }).start();
       }
 
-      const target = targets[prev || prev === 0 ? buyArr.length : buyNum];
+      const target = targets[prev.length > 0 ? buyArr.length : buyNum];
 
       Animated.spring(pos[index], {
         toValue: target,
         useNativeDriver: true,
       }).start();
-      setPrev(index);
+      prev.push(index);
+      setPrev([...prev]);
     }
+  }
+
+  const addButtonOpacity = useRef(new Animated.Value(1)).current;
+  function onSwipeStart() {
+    Animated.timing(addButtonOpacity, {
+      toValue: 0,
+      duration: 100,
+      easing: Easing.out(Easing.ease),
+      useNativeDriver: true,
+    }).start();
+
+    setTimeout(() => {
+      // if (addButtonOpacity) {
+      Animated.timing(addButtonOpacity, {
+        toValue: 1,
+        duration: 16,
+        easing: Easing.out(Easing.ease),
+        useNativeDriver: true,
+      }).start();
+      // }
+    }, 160);
   }
 
   return (
@@ -91,13 +113,19 @@ const App = () => {
         onIndexChange={setIndex}
         initialLayout={initialLayout}
         style={styles.tabView}
+        onSwipeStart={onSwipeStart}
       />
       <View style={styles.line} />
       <Body />
       {buyArr.map(commodity => commodity)}
       <Footer total={total} />
-      <TouchableOpacity style={styles.addButton} onPress={() => onAddPress()}>
-        <Image source={addImg} />
+      <TouchableOpacity style={[styles.addButton]} onPress={() => onAddPress()}>
+        <Animated.Image
+          style={{
+            opacity: addButtonOpacity,
+          }}
+          source={addImg}
+        />
       </TouchableOpacity>
     </LinearGradient>
   );

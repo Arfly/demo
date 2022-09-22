@@ -14,15 +14,6 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     top: '50%',
   },
-  mapText: {
-    fontFamily: 'PingFang SC',
-    fontStyle: 'normal',
-    fontWeight: '600',
-    fontSize: 14,
-    lineHeight: 16,
-    color: '#606060',
-    width: 228,
-  },
   addButton: {
     position: 'absolute',
     width: 99,

@@ -30,6 +30,15 @@ const styles = StyleSheet.create({
   },
   mapIcon: {marginRight: 18, width: 25},
   phoneIcon: {marginLeft: 18, width: 32},
+  mapText: {
+    fontFamily: 'PingFang SC',
+    fontStyle: 'normal',
+    fontWeight: '600',
+    fontSize: 14,
+    lineHeight: 16,
+    color: '#606060',
+    width: 228,
+  },
 });
 
 const IMG = {
