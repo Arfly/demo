@@ -82,7 +82,7 @@ const App = () => {
   function onSwipeStart() {
     Animated.timing(addButtonOpacity, {
       toValue: 0,
-      duration: 100,
+      duration: 300,
       easing: Easing.out(Easing.ease),
       useNativeDriver: true,
     }).start();
@@ -91,12 +91,12 @@ const App = () => {
       // if (addButtonOpacity) {
       Animated.timing(addButtonOpacity, {
         toValue: 1,
-        duration: 16,
+        duration: 300,
         easing: Easing.out(Easing.ease),
         useNativeDriver: true,
       }).start();
       // }
-    }, 160);
+    }, 300);
   }
 
   return (
