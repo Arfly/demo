@@ -2,7 +2,7 @@
 
 ## 产品运行效果
 
-![demo.gif](demo.gif)
+![demo.gif](Demo.gif)
 
 ## 项目初始化(MacOS)
 
